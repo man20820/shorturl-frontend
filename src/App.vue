@@ -1,26 +1,41 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <form @submit.prevent="submitForm">
+      <label>
+        url:
+        <input type="text" v-model="form.name" />
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios'
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      form: {
+        url: 'https://awdawdaw.aw/awdawd'
+      }
+    }
+  },
+  methods: {
+    submitForm() {
+      axios
+        .post('https://s.tkjpedia.com/api/shorturl/', this.form)
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
