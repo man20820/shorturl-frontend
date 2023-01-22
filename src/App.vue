@@ -12,8 +12,8 @@
         justify-center
       "
     >
-      <p class="flex flex-row justify-center">{{ welcome }}</p>
-      <p class="flex flex-row justify-center">{{ repo }}</p>
+      <p class="flex justify-center items-center w-full m-2">{{ welcome }}</p>
+      <p class="flex justify-center items-center w-full m-2">{{ repo }}</p>
       <div class="bg-white p-6 rounded-lg">
         <form @submit.prevent="submitForm" class="flex flex-row justify-center">
           <input

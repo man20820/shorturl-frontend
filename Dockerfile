@@ -1,5 +1,5 @@
 FROM node:16.17.0-buster as builder
-ENV VUE_APP_BASE_URL=""
+ENV VUE_APP_BASE_URL=
 
 WORKDIR /home
 COPY . .
