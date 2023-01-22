@@ -1,41 +1,108 @@
 <template>
-  <div>
-    <form @submit.prevent="submitForm">
-      <label>
-        url:
-        <input type="text" v-model="form.name" />
-      </label>
-      <button type="submit">Submit</button>
-    </form>
+  <div class="relative h-screen">
+    <div
+      class="
+        flex flex-col
+        absolute
+        top-0
+        left-0
+        right-0
+        bottom-0
+        justify-center
+      "
+    >
+      <div class="bg-white p-6 rounded-lg">
+        <form @submit.prevent="submitForm" class="flex flex-row justify-center">
+          <input
+            class="border border-gray-400 p-2 rounded-lg w-1/2"
+            type="text"
+            v-model="form.url"
+          />
+          <button
+            type="submit"
+            class="
+              bg-indigo-500
+              text-white
+              px-4
+              py-4
+              mx-4
+              rounded-lg
+              hover:bg-indigo-600
+            "
+          >
+            Shorten
+          </button>
+        </form>
+      </div>
+      <div v-if="shortUrl" class="flex flex-col">
+        <div class="bg-white p-6 rounded-lg">
+          <form @submit.prevent="copyText" class="flex flex-row justify-center">
+            <input
+              class="border border-gray-400 p-2 rounded-lg w-1/2"
+              type="text"
+              v-model="shortUrl"
+            />
+            <button
+              @click="copyText"
+              class="
+                bg-indigo-500
+                text-white
+                px-4
+                py-4
+                mx-4
+                rounded-lg
+                hover:bg-indigo-600
+              "
+            >
+              Copy
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
+
+const baseUrl = process.env.VUE_APP_BASE_URL;
 
 export default {
   data() {
     return {
       form: {
-        url: 'https://awdawdaw.aw/awdawd'
-      }
-    }
+        url: "",
+      },
+      shortUrl: null,
+    };
   },
   methods: {
     submitForm() {
       axios
-        .post('https://s.tkjpedia.com/api/shorturl/', this.form)
-        .then(response => {
-          console.log(response.data)
+        .post(`${baseUrl}api/shorturl`, this.form)
+        .then((response) => {
+          console.log(response.data);
+          // this.shortUrl = response.data.short_url
+          this.shortUrl = `${baseUrl}` + response.data.short_url;
         })
-        .catch(error => {
-          console.log(error)
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    copyText() {
+      navigator.clipboard
+        .writeText(this.shortUrl)
+        .then(() => {
+          console.log("Text copied to clipboard");
         })
-    }
-  }
-}
+        .catch((err) => {
+          console.error("Failed to copy text: ", err);
+        });
+    },
+  },
+};
 </script>
 
 <style>
-
 </style>
