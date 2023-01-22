@@ -1,5 +1,6 @@
 <template>
   <div class="relative h-screen">
+    <div></div>
     <div
       class="
         flex flex-col
@@ -11,6 +12,8 @@
         justify-center
       "
     >
+      <p class="flex flex-row justify-center">{{ welcome }}</p>
+      <p class="flex flex-row justify-center">{{ repo }}</p>
       <div class="bg-white p-6 rounded-lg">
         <form @submit.prevent="submitForm" class="flex flex-row justify-center">
           <input
@@ -59,6 +62,15 @@
           </form>
         </div>
       </div>
+      <div v-else-if="shortUrlError" class="flex flex-col">
+        <div class="bg-white p-6 rounded-lg">
+          <div class="flex flex-row justify-center">
+            <p class="border border-gray-400 p-2 rounded-lg text-red-500">
+              {{ shortUrlError }}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -75,19 +87,33 @@ export default {
         url: "",
       },
       shortUrl: null,
+      shortUrlError: null,
+      welcome: "",
+      welcomeText:
+        "This is a simple shortlink / shorturl project. This can shorten your long url to be very short.",
+      repo: "",
+      repoText:
+        "Backend: https://github.com/man20820/shorturl-backend, Frontend: https://github.com/man20820/shorturl-frontend",
     };
   },
+  mounted() {
+    this.typeWelcomeMessage();
+    this.typeRepoMessage();
+  },
+
   methods: {
     submitForm() {
       axios
         .post(`${baseUrl}api/shorturl`, this.form)
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           // this.shortUrl = response.data.short_url
           this.shortUrl = `${baseUrl}` + response.data.short_url;
         })
         .catch((error) => {
-          console.log(error);
+          //console.log(error.response.data.error);
+          this.shortUrlError = error.response.data.error;
+          this.shortUrl = null;
         });
     },
     copyText() {
@@ -99,6 +125,24 @@ export default {
         .catch((err) => {
           console.error("Failed to copy text: ", err);
         });
+    },
+    typeWelcomeMessage() {
+      let i = 0;
+      const typing = setInterval(() => {
+        this.welcome += this.welcomeText[i++];
+        if (i === this.welcomeText.length) {
+          clearInterval(typing);
+        }
+      }, 100);
+    },
+    typeRepoMessage() {
+      let i = 0;
+      const typing = setInterval(() => {
+        this.repo += this.repoText[i++];
+        if (i === this.repoText.length) {
+          clearInterval(typing);
+        }
+      }, 100);
     },
   },
 };
